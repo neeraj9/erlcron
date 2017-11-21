@@ -1,4 +1,5 @@
 %%% @copyright Erlware, LLC. All Rights Reserved.
+%%% @copyright Neeraj Sharma <neeraj.sharma@alumni.iitg.ernet.in>
 %%%
 %%% This file is provided to you under the BSD License; you may not use
 %%% this file except in compliance with the License.
@@ -51,7 +52,7 @@
 -type  job()      :: {run_when(), callable()}.
 
 %% should be opaque but dialyzer does not allow it
--type job_ref()   :: reference().
+-type job_ref()   :: binary().
 
 
 %%%===================================================================
@@ -68,11 +69,11 @@ validate(Spec) ->
 %%  Adds a new job to the cron system. Jobs are described in the job()
 %%  spec. It returns the JobRef that can be used to manipulate the job
 %%  after it is created.
-
 -spec cron(job()) -> job_ref().
 cron(Job) ->
-    JobRef = make_ref(),
+    {JobRef, _} = uuid:get_v1(uuid:new(self(), erlang)),
     ecrn_cron_sup:add_job(JobRef, Job).
+
 %% @doc
 %%  Convienience method to specify a job run to run on a daily basis
 %%  at a specific time.
