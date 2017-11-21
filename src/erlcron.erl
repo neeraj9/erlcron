@@ -7,6 +7,7 @@
 
 -export([validate/1,
          cron/1,
+         cron/2,
          at/2,
          once/2,
          cancel/1,
@@ -72,6 +73,14 @@ validate(Spec) ->
 -spec cron(job()) -> job_ref().
 cron(Job) ->
     {JobRef, _} = uuid:get_v1(uuid:new(self(), erlang)),
+    ecrn_cron_sup:add_job(JobRef, Job).
+
+%% @doc
+%%  Adds a new job to the cron system. Jobs are described in the job()
+%%  spec. It returns the JobRef that can be used to manipulate the job
+%%  after it is created.
+-spec cron(job(), job_ref()) -> job_ref().
+cron(Job, JobRef) when is_binary(JobRef) ->
     ecrn_cron_sup:add_job(JobRef, Job).
 
 %% @doc
