@@ -192,7 +192,7 @@ normalize_seconds(State, Seconds) ->
         Value when Value >= 0 ->
             Value;
         _ ->
-            erlang:display(erlang:get_stacktrace()),
+            %% erlang:display(erlang:get_stacktrace()),
             throw(invalid_once_exception)
     end.
 
